@@ -1,0 +1,36 @@
+        ┌──────────────────────────┐
+        │        API Gateway       │
+        └───────────────┬──────────┘
+                        │ (REST API, or async communication)
+                        │
+        ┌───────────────▼───────────────┐
+        │    Orchestrator/Coordinator   │
+        │      (Axon, Temporal.io, etc.)│
+        └───┬───────────────┬───────────┘
+            │ REST/Events   │ REST/Events
+            │               │
+┌───────────▼───┐ ┌─────────▼───────────┐
+│ Billing MS    │ │ Payment Processor MS│
+│(Persists Bill)│ │(Persists Payment Tx)│
+└───────────────┘ └─────────┬───────────┘
+                            │ REST/Events
+                            │  
+                  ┌─────────▼───────────┐
+                  │ Account MS          │
+                  │ (Persists Accounts) │
+                  └─────────────────────┘
+
+       ┌───────────────────────────────────┐
+       │      Common Infrastructure:       │
+       │  • Service Discovery (Eureka/Consul)│
+       │  • Configuration Server (Spring Cloud)│
+       │  • Event Bus (Kafka/RabbitMQ)     │
+       │  • Monitoring & Alerting (Prometheus, Grafana/ELK)│
+       │  • Distributed Tracing (Zipkin/Jaeger)│
+       └───────────────────────────────────┘
+       
+         ┌───────────────────────────┐
+         │Persistent Local Databases │
+         │ (Each MS has own database)│
+         └───────────────────────────┘
+                (Postgres/MySQL/Mongo)

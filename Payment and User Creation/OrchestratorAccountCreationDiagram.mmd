@@ -1,0 +1,22 @@
+User Request For --> Orchestrator                       
+ Account Creation          |                               
+                    Billing MS                               
+                  [Generate Bill]                         
+                           |                               
+          -----------------|-----------------              
+         | Success                          | fail         
+Payment Processor MS                  Trigger rollback(Billing MS)
+[Process Payment]                     [Cancel Bill]        
+         |                                         
+   -----------------------------------             
+   | Success                       | fail         
+Account MS                Trigger rollback(Payment, Billing)
+[Create User]             - [Refund Payment]        
+                          - [Cancel Bill]               
+         |                              
+ ----------------                       
+ | Success     | fail                
+Saga completes  Trigger rollback (Account, Payment, Billing)
+successfully     - [Deactivate Account]
+                 - [Refund Payment]
+                 - [Cancel Bill]

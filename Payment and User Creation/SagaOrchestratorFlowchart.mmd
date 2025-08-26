@@ -1,0 +1,30 @@
+ User initiates request
+            │
+            ▼   
+ ┌───────────────────┐
+ │  SAGA Orchestrator│──fail───┐
+ └─────────┬─────────┘         │
+           │                   │
+           ▼                   │
+ ┌───────────────────┐         │
+ │Billing Microservice│──fail───┤
+ └─────────┬─────────┘         ▼
+ success   │              [End Saga]
+           ▼ (Bill Created)
+ ┌────────────────────────┐
+ │ Payment Microservice   │───fail───┐
+ └─────────┬──────────────┘          │
+ success   │                         │
+           ▼ (Payment Success)       │
+ ┌─────────────────────────┐         │
+ │ Account Microservice    │───fail───┐
+ └─────────┬───────────────┘          │
+ success   │                          │
+           ▼                          │
+   [Saga Completed]                   │
+                                      │
+ ┌──────────Compensation Workflows───────────┐
+ │ - Cancel Bill (Billing MS)                │
+ │ - Refund Payment (Payment MS)             │
+ │ - Deactivate/Delete Account (Account MS)  │
+ └───────────────────────────────────────────┘
